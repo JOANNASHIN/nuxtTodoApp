@@ -1,0 +1,566 @@
+/* 모바일 */
+@media screen and (max-width: 750px) {
+    .fb {
+        &__header {
+            display: block;
+            background: $point;
+            padding: vw(20px);
+        }
+
+        &__title {
+            font-size: vw(30px);
+            text-align: center;
+        }
+
+        &__footer {
+            padding-bottom: vw(190px);
+            
+            &__wrapper {
+                position: fixed;
+                bottom: vw(100px);
+                width: 100%;
+                text-align: center;
+            }
+
+            &__menus {
+                display: inline-block;
+                height: vw(90px);
+                background: rgba(236, 113, 38, 0.7);
+                border-radius: vw(50px);
+                font-size: 0;
+            }
+
+            &__menu {
+                display: inline-block;
+                color: #fff;
+                width: vw(150px);
+                height: 100%;
+                font-weight: bold;
+                font-size: vw(23px); 
+                line-height: vw(90px);
+
+                &.active {
+                    width: vw(90px);
+                    height: vw(90px);
+                    border-radius: 50%;
+                    background: $point;
+                }
+            }
+        }
+
+        &__calendar {
+            display: block;
+            width: 100%;
+            padding: vw(30px);
+
+            &__wrapper {
+                position: relative;
+            }
+
+            &__type {
+                display: inline-block;
+                margin-bottom: vw(20px);
+                padding: vw(8px 20px);
+                border: vw(3px) solid #000;
+                background: #000;
+                color: #fff;
+                border-radius: vw(20px);
+                text-align: right;
+                font-weight: bold;
+                font-size: vw(25px);
+            }
+        }
+
+        &__todo {
+            overflow: hidden;
+            display: block;
+            width: 100%;
+            padding: vw(80px 30px);
+
+            input {
+                display: inline-block;
+                width: 100%;
+                padding: vw(0 30px 0 20px);
+                height: vw(80px);
+                border: vw(2px) solid #ddd;
+                border-radius: vw(20px);
+                font-size: vw(26px);
+                vertical-align: middle;
+                box-sizing: border-box;
+            }
+
+            button {
+                display: inline-block;
+                border-radius: vw(20px);
+                font-weight: bold;
+                font-size: vw(24px);
+            }
+    
+            &__today {
+                margin-bottom: vw(50px);
+                font-weight: bold;
+                font-size: vw(34px);
+                line-height: 1;
+            }
+    
+            &__addlist {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: center;
+                height: vw(100px);
+                margin-top: vw(50px);
+                font-size: vw(30px);
+
+                input {
+                    transform: translate(#{vw(20px)}, 0);
+                }
+            }
+
+            &__add {
+                flex: 0 0 20%;
+                height: 80%;
+                background: #000;
+                border-radius: vw(30px);
+                color: #fff;
+                font-weight: bold;
+                transform: translate(#{vw(-30px)}, 0);
+            }
+    
+            &__count {
+                font-size: 0;
+                text-align: center;
+
+                .count {
+                    &__box {
+                        display: inline-block;
+                        margin-right: vw(30px);
+                    }
+    
+                    &__title {
+                        margin-right: vw(10px);
+                        font-weight: bold;
+                        font-size: vw(35px);
+                    }
+    
+                    &__value {
+                        font-family: "roboto";
+                        color: $point;
+                        font-weight: bold;
+                        font-size: vw(40px);
+
+                        &--gray {
+                            color: #999;
+                        }
+                    }
+                }
+            }
+    
+            &__content {
+                margin-top: vw(100px);
+            }
+    
+            &__scroll {
+                overflow-y: auto;
+                max-height: vw(50rem);
+            }
+            
+            &__each {
+                position: relative;
+                padding: vw(20px 0);
+                border-bottom: vw(2px) solid #ddd;
+    
+                &:first-child {
+                    padding-top: 0;
+    
+                    .fb__todo__update {
+                        padding-top: 0;
+                    }
+                }
+    
+                &.done {
+                    opacity: 0.3;
+    
+                    .fb__todo__text {
+                        text-decoration: line-through;
+                    }
+                }
+
+                .each {
+                    &__wrapper {
+                        display: flex;
+                        flex-wrap: nowrap;
+                        width: 100%;
+                    }
+
+                    &__content {
+                        width: 100%;
+                    }
+
+                    &__text {
+                        width: 100%;
+                        padding-right: vw(20px);
+                        font-size: vw(32px);
+                        line-height: 1.3;
+                        word-break: break-all;
+                    }
+            
+                    &__date {
+                        display: block;
+                        padding-top: vw(20px);
+                        color: #999;
+                        font-size: vw(24px);
+                        line-height: 1;
+                    }
+            
+                    &__controller {
+                        width: vw(100px);
+                        
+                        button {
+                            display: block;
+                            width: vw(100px);
+                            height: vw(60px);
+                            border-radius: vw(20px);
+                            font-weight: bold;
+                            font-size: vw(24px);
+
+                            &:not(:last-child) {
+                                margin-bottom: vw(10px);
+                            }
+                        }
+            
+                        &__rewrite {
+                            border: vw(3px) solid #666;
+                            color: #666;
+                        }
+            
+                        &__delete {
+                            border: vw(3px) solid red;
+                            color: red;
+                        }
+                    }
+
+                    &__update {
+                        display: none;
+                        justify-content: center;
+                        align-items: center;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        z-index: 1;
+                        width: 100%;
+                        height: 100%;
+                        padding: vw(0 20px);
+                        background: #f8f8f8;
+                        font-size: 0;
+            
+                        &.show {
+                            display: flex;
+                        }
+            
+                        input {
+                            width: calc(100% - #{vw(200px)});
+                            margin-right: vw(10px);
+                        }
+                    }
+                }
+            }
+
+            &__empty {
+                padding: vw(200px 0);
+                font-size: vw(35px);
+                text-align: center;
+            }
+        }
+    }
+}
+
+/* pc */
+@media screen and (min-width: 751px) {
+    .fb {
+        &__todo {
+            display: block;
+            width: 1000px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 50px;
+            background: #fff;
+    
+            .fb {
+                // 공통 
+                &__button {
+                    width: 100px;
+                    height: 50px;
+                    background: #000;
+                    border: 2px solid #000;
+                    color: #fff;
+                    font-size: 18px;
+                    vertical-align: middle;
+                }
+            }
+    
+            &__header {
+                position: relative;
+                width: 100%;
+                height: 185px;
+                border-bottom: 2px solid #000;
+            }
+            
+            &__title {
+                padding-right: 300px; 
+                font-size: 40px;
+                line-height: 1;
+            }
+    
+            &__today {
+                position: absolute;
+                top: 8px;
+                right: 0;
+                font-size: 28px;
+                line-height: 1;
+            }
+    
+            &__addlist {
+                margin-top: 44px;
+                font-size: 0;
+                line-height: 0;
+    
+                input {
+                    width: 550px;
+                    height: 50px;
+                    border: 2px solid #000;
+                    font-size: 18px;
+                    vertical-align: middle;
+                }
+            }
+    
+            &__count {
+                margin-top: 18px;
+                font-size: 0;
+            }
+    
+            .count {
+                display: inline-block;
+                margin-right: 22px;
+                font-size: 0;
+    
+    
+                &:last-child {
+                    margin-right: 0;
+                }
+    
+                &__name {
+                    margin-right: 5px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    line-height: 1;
+                }
+    
+                &__value {
+                    font-size: 18px;
+                    line-height: 1;
+                    color: #999999;
+                }
+            }
+    
+            &__content {
+                display: none;
+                margin-top: 20px;
+    
+                &.show {
+                    display: block;
+                }
+    
+                &--null {
+                    display: none;
+                    
+                    &.show {
+                        display: block;
+                    }
+    
+                    .fb__todo__text {
+                        padding-top: 50px;
+                        text-align: center;
+                    }
+                }
+            }
+    
+            &__scroll {
+                overflow-y: auto;
+                max-height: 710px;
+            }
+            
+            &__list {
+                position: relative;
+                padding: 20px 0;
+                border-bottom: 1px solid #aaa;
+    
+                &:after {
+                    display: block;
+                    clear: both;
+                    content: "";
+                }
+    
+                &:first-child {
+                    padding-top: 0;
+    
+                    .fb__todo__update {
+                        padding-top: 0;
+                    }
+                }
+    
+                &:last-child {
+                    border-bottom: none;
+                }
+    
+                &.checked {
+                    opacity: 0.4;
+    
+                    .fb__todo__text {
+                        text-decoration: line-through;
+                    }
+                }
+            }
+    
+            &__textWrap {
+                float: left;
+                width: 564px;
+            }
+    
+            &__text {
+                min-height: 40px;
+                font-size: 18px;
+                line-height: 20px;
+                cursor: pointer;
+            }
+    
+            &__date {
+                display: block;
+                margin-top: 9px;
+                color: #999;
+                font-size: 14px;
+                line-height: 1;
+            }
+    
+            &__controller {
+                float: right;
+                
+                button {
+                    display: block;
+                    width: 50px;
+                    height: 30px;
+                }
+    
+                &--rewrite {
+                    background: #666;
+                    margin-bottom: 4px;
+                    color: #fff;
+                    font-size: 14px;
+                }
+    
+                &--delete {
+                    background: #000;
+                    color: #fff;
+                    font-size: 14px;
+                }
+            }
+    
+            &__update {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: calc(100%  - 1px);
+                padding-top: 23px;
+                background: #fff;
+                font-size: 0;
+                vertical-align: middle;
+    
+                &.show {
+                    display: block;
+                }
+    
+                input {
+                    width: calc(100% - 220px);
+                    height: 50px;
+                    border: 2px solid #000;
+                    vertical-align: middle;
+                }
+    
+                button:last-child {
+                    background: #fff;
+                    color: #000;
+                } 
+            }
+    
+            //피드백반영
+            &__feedback {
+                .fb__todo {
+                    &__count {
+                        .count {
+                            &__box {
+                                display: inline-block;
+                                margin-right: 22px;
+                            }
+    
+                            &__title {
+                                margin-right: 5px;
+                                font-size: 18px;
+                                font-weight: bold;
+                                line-height: 1;
+                            }
+    
+                            &__value {
+                                font-size: 18px;
+                                line-height: 1;
+                                color: #999999;
+                            }
+                        }
+                    }
+    
+                    &__content {
+                        display: block;
+                    }
+            
+                    &__scroll {
+                        overflow-y: auto;
+                        max-height: 710px;
+                        margin-top: 20px;
+                    }
+                    
+                    &__list {
+                        &.done {
+                            opacity: 0.3;
+            
+                            .fb__todo__text {
+                                text-decoration: line-through;
+                            }
+                        }
+                    }
+           
+                    &__inner {
+                        float: left;
+                        width: 564px;
+                    }
+    
+                    &__text {
+                        cursor: pointer;
+                    }
+            
+                    &__empty {
+                        display: none;
+                        padding: 100px 0;
+                        font-size: 20px;
+                        text-align: center;
+            
+                        &.show {
+                            display: block;
+                        }
+                    }
+                }
+            
+            }
+        }
+    }
+}

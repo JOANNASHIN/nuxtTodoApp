@@ -24,6 +24,7 @@ export default {
     
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'icon', type: 'image/x-icon', sizes: '32x32', href: '/favicon32x32.png' },
       { rel: 'apple-touch-icon', sizes: '96x96', href: '/favicon96x96.png' }
     ],
     

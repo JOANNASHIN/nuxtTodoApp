@@ -85,13 +85,13 @@
                         dates: todo.dates,
                         
                         dot: todo.key === "today" ? false : {
-                            color: todo.status === "done" ? "gray" : "orange"
+                            color: todo.status ? "gray" : "orange"
                         },
 
                         highlight: todo.key === "today" ? "red" : "",
                         
                         popover: todo.key === "today" ? false : {
-                            label: `${todo.status === "done" ? '(완료) ' : ''}${todo.content}`
+                            label: `${todo.status ? '(완료) ' : ''}${todo.content}`
                         },
 
                         customData: todo,

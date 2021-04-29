@@ -104,6 +104,8 @@
             async requestTodoList() {
                 const response = await this.getJsondata("/json/todoList.json");
                 this.todoList = response.todo; 
+
+                this.updateCount();
             },
             
             getDate() {

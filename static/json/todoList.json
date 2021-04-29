@@ -12,7 +12,7 @@
             "id": 1,
             "content": "수민이 생일",
             "dates": "2021-04-25",
-            "status": "done",
+            "status": true,
             "isEdit": false
         },
 
@@ -20,7 +20,7 @@
             "id": 2,
             "content": "아빠생신",
             "dates": "2021-04-26",
-            "status": false,
+            "status": true,
             "isEdit": false
         },
 

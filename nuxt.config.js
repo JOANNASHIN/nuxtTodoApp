@@ -69,6 +69,11 @@ export default {
     '@nuxtjs/axios',
   ],
 
+  serverMiddleware: [
+    // <project root>/api/index.js 모듈을 미들웨어로 추가
+    '~/api/index.js',
+  ],
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
 

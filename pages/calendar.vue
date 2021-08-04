@@ -17,6 +17,12 @@
                 :attributes="attributes"
             />
         </div>
+
+        <ul>
+            <li v-for="(list, index) in todoList" :key="index">
+                {{list.content}}
+            </li>
+        </ul>
     </section>
 </template>
 
@@ -102,8 +108,18 @@
 
         methods: {
             async requestTodoList() {
-                const response = await this.getJsondata("/json/todoList.json");
-                this.todoList = response.todo; 
+                // const response = await this.getJsondata("/json/todoList.json");
+                // this.todoList = response.todo; 
+
+                const response = [];
+                
+                database.collection("todolist").get().then((result) => {
+                    result.forEach(list => {
+                        response.push(list.data());
+                    })
+                })
+
+                this.todoList = response; 
 
                 this.todoList.push(
                     {

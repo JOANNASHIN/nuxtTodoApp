@@ -34,6 +34,9 @@ export default {
 
     script: [
         {src: "/__/firebase/8.4.1/firebase-app.js"},
+        {src: "/__/firebase/8.4.1/firebase-auth.js"},
+        {src: "/__/firebase/8.4.1/firebase-database.js"},
+        {src: "/__/firebase/8.4.1/firebase-firestore.js"},
         {src: "/__/firebase/init.js"},
     ]
   },
@@ -70,8 +73,8 @@ export default {
   ],
 
   serverMiddleware: [
-    // <project root>/api/index.js 모듈을 미들웨어로 추가
-    '~/api/index.js',
+    // mysql 연동 테스트용
+    // '~/api/index.js',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

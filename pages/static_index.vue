@@ -101,18 +101,11 @@
 
         methods: {
             async requestTodoList() {
-                const response = [];
-                
-                database.collection("todolist").get().then((result) => {
-                    result.forEach(list => {
-                        response.push(list.data());
-                    })
-                })
+                const response = await this.getJsondata("/json/todoList.json");
+                this.todoList = response.todo; 
 
-                this.todoList = response; 
                 this.updateCount();
             },
-            
             
             getDate() {
                 const dayList = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];

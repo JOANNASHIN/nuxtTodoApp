@@ -12,16 +12,17 @@
     export default {
         data() {
             return {
-                menuOpen: "calendar",
+                menuOpen: "list",
             }
         },
 
         created() {
-            if (window.location.pathname === "/") {
-                this.menuOpen = "list";
+            console.log(window.location.pathname);
+            if (window.location.pathname === "/calendar") {
+                this.menuOpen = "calendar";
             }
             else {
-                this.menuOpen = "calendar";
+                this.menuOpen = "list";
             }
         }
     }

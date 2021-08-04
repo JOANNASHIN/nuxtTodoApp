@@ -1,4 +1,16 @@
 .fb {
+    &::-webkit-scrollbar {
+        display: none;
+
+        &-thumb {
+            display: none;
+        }
+
+        &-button {
+            display: none;
+        }
+    }
+
     &__title {
         color: #000;
         font-weight: bold;

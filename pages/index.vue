@@ -94,7 +94,6 @@
 
 <script>
     import moment from "moment";
-import { NEWDATE } from 'mysql/lib/protocol/constants/types';
 
     moment.lang('ko', {
         weekdays: ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"],

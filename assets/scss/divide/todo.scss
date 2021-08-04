@@ -17,6 +17,7 @@
             position: fixed;
             left: 50%;
             bottom: vw(100px);
+            z-index: 10;
             transform: translate(-50%, 0);
         }
 
@@ -67,6 +68,99 @@
             text-align: right;
             font-weight: bold;
             font-size: vw(25px);
+        }
+
+        &__list {
+            margin-top: vw(80px);
+
+            .list {
+                &__title {
+                    display: block;
+                    padding-bottom: vw(30px);
+                    color: #1e1e1e;
+                    font-size: 0;
+
+                    em {
+                        display: inline-block;
+                        font-weight: 600;
+                        font-size: vw(28px);
+                        vertical-align: middle;
+                    }
+
+                    span {
+                        font-weight: 600;
+                        font-size: vw(24px);
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                }
+
+                &__box {
+                    margin-bottom: vw(24px);
+
+                    &.done {
+                        &:before {
+                            background: #ddd;
+                        }
+                    }
+
+                    &:before {
+                        display: inline-block;
+                        width: vw(12px);
+                        height: vw(12px);
+                        margin-right: vw(12px);
+                        background: $pcolor;
+                        content: "";
+                    }
+                }
+    
+                &__text {
+                    display: inline-block;
+                    font-weight: 600;
+                    font-size: vw(28px);
+                }
+            }
+            
+        }
+
+        // data-picker
+        .vc {
+            &-day {
+                min-height: vw(65px) !important;
+
+                &-content {
+                    width: vw(50px) !important;
+                    height: vw(50px) !important;
+                    font-size: vw(22px) !important;
+                }
+
+                &-box-center-center {
+                    align-items: baseline !important;
+                }
+            }
+
+            &-highlight {
+                width: vw(50px) !important;
+                height: vw(50px) !important;
+            }
+
+            &-dots {
+                flex-wrap: wrap;
+                overflow: hidden !important;
+                max-width: vw(48px) !important;
+                height: vw(10px);
+                margin: vw(0 -3px) !important;
+            }
+
+            &-dot {
+                width: vw(10px) !important;
+                height: vw(10px) !important;
+                margin: vw(0 3px) !important;
+    
+                &:last-child {
+                    margin-right: 0 !important;
+                }
+            }
         }
     }
 

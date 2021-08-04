@@ -24,6 +24,7 @@
 }
 
 $point: #ec7126;
+$pcolor: #ec7126;
 
 @mixin line($lineCount: 1) {
     /* 사용법 : @include line(라인수) */

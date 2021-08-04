@@ -203,7 +203,7 @@ import { NEWDATE } from 'mysql/lib/protocol/constants/types';
                 return isPass;
             },
 
-            addToList() {
+            async addToList() {
                 const isPass = this.addValidationCheck();
 
                 if (!isPass) return ;
@@ -224,7 +224,7 @@ import { NEWDATE } from 'mysql/lib/protocol/constants/types';
                     // database.collection("todolist").doc("이름").set(todoData);
 
                     //추가하기
-                    this.collection.add(todoData)
+                    await this.collection.add(todoData)
                         .then(result => {
                             console.log(result);
                         })

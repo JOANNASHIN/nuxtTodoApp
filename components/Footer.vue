@@ -2,8 +2,8 @@
   <footer class="fb__footer">
        <div class="fb__footer__wrapper">
            <div class="fb__footer__menus">
-                <NuxtLink to="/" class="fb__footer__menu" :class="menuOpen=='list' ? 'active' : ''" @click="menuOpen='list'">리스트</NuxtLink>
-                <NuxtLink to="/calendar" class="fb__footer__menu" :class="menuOpen=='calendar' ? 'active' : ''" @click="menuOpen='calendar'">달력</NuxtLink>
+                <NuxtLink to="/" class="fb__footer__menu" :class="menuOpen=='list' ? 'active' : ''" @click.native="menuActive('list')">리스트</NuxtLink>
+                <NuxtLink to="/calendar" class="fb__footer__menu" :class="menuOpen=='calendar' ? 'active' : ''" @click.native="menuActive('calendar')">달력</NuxtLink>
            </div>
        </div>
   </footer>
@@ -17,12 +17,17 @@
         },
 
         created() {
-            console.log(window.location.pathname);
-            if (window.location.pathname === "/calendar") {
-                this.menuOpen = "calendar";
-            }
-            else {
-                this.menuOpen = "list";
+           this.menuActive(window.location.pathname)
+        },
+
+        methods: {
+            menuActive(type) {
+                if (type.indexOf("calendar") != -1) {
+                    this.menuOpen = "calendar";
+                }
+                else {
+                    this.menuOpen = "list";
+                }
             }
         }
     }

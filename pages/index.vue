@@ -17,7 +17,7 @@
                     <em class="count__value count__value--gray">{{count.end}}</em>
                 </li>
             </ul>
-             <!-- <p class="fb__todo__today" v-text="getDate()"></p> -->
+             <!-- <p class="fb__todo__today" v-text="getDateText()"></p> -->
             <div class="fb__todo__addlist">
                 <input ref="todoInput" type="text" value="" @keyup.enter="addToList()" placeholder="일정을 입력하세요." maxlength="100">
                 <button class="fb__todo__add" @click="addToList()">추가</button>
@@ -29,24 +29,24 @@
             <template v-if="todoList && todoList.length">
                 <ul class="fb__todo__case fb__todo__scroll">
                     <template v-for="(list, index) in todoList">
-                        <li class="fb__todo__each" :class="list.status ? 'done' : ''" :key="index">
+                        <li class="fb__todo__each" :class="list.status ? 'done' : ''" :key="index" :data-uuid="list.id">
                             <div class="each__wrapper">
-                                <div class="each__content" @click.stop="list.status = list.status ? false : true; updateCount();">
+                                <div class="each__content" @click.stop="updateStatus(list)">
                                     <p class="each__text fb__todo__text">
                                         {{list.content}}
                                     </p>
                                     
-                                    <span class="each__date fb__todo__date">{{list.dates}}</span>
+                                    <span class="each__date fb__todo__date">{{getDateText(list.dates)}}</span>
                                 </div>
 
                                 <div class="each__controller">
                                     <button class="each__controller__rewrite" :disabled="list.status ? true : false" @click.stop="list.isEdit = true;">수정</button>
-                                    <button class="each__controller__delete" @click.stop="deleteFromList(index);">삭제</button>
+                                    <button class="each__controller__delete" @click.stop="deleteFromList(list.id);">삭제</button>
                                 </div>
                             </div>
                             <div class="each__update" :class="list.isEdit ? 'show' : ''">
-                                <input ref="editInput" type="text" :value="list.content">
-                                <button class="fb__button" @click.stop="editListContent(index, list);">수정</button>
+                                <input :ref="'editInput' + list.id" type="text" :value="list.content">
+                                <button class="fb__button" @click.stop="editListContent(list.id);">수정</button>
                                 <button class="fb__button" @click.stop="list.isEdit = false;">취소</button>
                             </div>
                         </li>
@@ -92,31 +92,34 @@
         },
 
         created() {
-            this.requestTodoList();
-        },
+            console.clear();
 
-        mounted(){
-            
+            this.requestTodoList();
         },
 
         methods: {
             async requestTodoList() {
                 const response = [];
-                
+
                 database.collection("todolist").get().then((result) => {
                     result.forEach(list => {
-                        response.push(list.data());
+                        response.push(Object.assign(list.data(), {
+                            id: list.id
+                        }));
                     })
                 })
 
-                this.todoList = response; 
+                this.todoList = response;
                 this.updateCount();
             },
             
-            
             getDate() {
+                return moment(new Date()).format("YYYY-MM-DD");
+            },
+            
+            getDateText(date) {
                 const dayList = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
-                return moment(new Date()).format("YYYY.MM.DD") + " " + dayList[new Date().getDay()];
+                return moment(date).format("YYYY.MM.DD") + " " + dayList[new Date(date).getDay()];
             },
 
             updateCount() {
@@ -148,31 +151,70 @@
                 }
 
                 const todoData = {
+                    id: this.todoList.length + 1,
                     content: $input.value,
                     dates: this.getDate(),
                     status: false,
                     isEdit: false,
                 }
+                
+                // database.collection("todolist").doc("이름").set(todoData);
+
+                database.collection("todolist")
+                        .add(todoData)
+                        .then(result => {
+                            console.log(result);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+
+                this.requestTodoList();
+                this.updateCount();
 
                 $input.value = "";
-
-                this.todoList.unshift(todoData);
-                this.updateCount();
+                
                 return false;
             },
 
-            deleteFromList(index) {
-                this.todoList.splice(index, 1);
+            deleteFromList(uuid) {
+                const ref = database.collection('todolist').doc(uuid);
+
+                if (ref) ref.delete();
+
+                this.requestTodoList();
                 this.updateCount();
             },
 
-            editListContent(index, list) {
-                const $editInputs = this.$refs.editInput[index];
+            async editListContent(uuid) {
+                const $editInputs = this.$refs[`editInput${uuid}`][0];
+                const ref = database.collection('todolist').doc(uuid);
+                
+                if (!$editInputs || !ref) return ;
 
-                list.content = $editInputs.value;
-                list.isEdit = false;
+                const res = await ref.update({
+                    content:  $editInputs.value,
+                    isEdit: false,
+                    dates: this.getDate()
+                });
 
+                console.log("res", res)
+
+                this.requestTodoList();
             },
+
+            async updateStatus({id, status}) {
+                const ref = database.collection('todolist').doc(id);
+
+                const res = await ref.update({
+                    status: status ? false : true,
+                });
+
+                console.log("res", res)
+                this.requestTodoList();
+                
+                this.updateCount();
+            }
         }
     }
 </script>

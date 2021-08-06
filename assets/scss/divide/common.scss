@@ -12,10 +12,6 @@
     }
 
     &__title {
-        color: #000;
-        font-weight: bold;
-        font-size: 30px;
-
         &--hidden {
             font-size: 0;
             line-height: 0;
@@ -36,12 +32,14 @@
         }
         
         &__shimmer {
+            padding-top: vw(20px);
+            
             .shimmer {
                 &__list {
                     padding: vw(0 0 50px 0);
                 }
 
-                &__box {    
+                &__box {
                     display: block;
                     width: 100%;
                     height: vw(40px);
@@ -70,6 +68,144 @@
                     &.w50 {
                         width: 50%;
                     }
+                }
+            }
+        }
+    }
+
+    &__toggle {
+       .toggle {
+            &__label {
+                display: block;
+                position: relative;
+                width: vw(122px);
+                height: vw(62px);
+                // background: linear-gradient(to bottom, #9e9e9e 30%, #f4f4f4);
+                border-radius: vw(40px);
+                // box-shadow: 0 vw(2px) 0 0 #fff, 0 vw(-2px) 0 0 #969494;
+                -webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    display: block;
+                    height: vw(80px);
+                    border-radius: vw(42px);
+                    top: vw(-2px);
+                    left: vw(-2px);
+                    z-index: -1;
+                    background: linear-gradient(to bottom, #969494, #fff);
+                }
+                
+                &:focus, &:active {
+                    outline: 0;
+                }
+            }
+
+            &__checkbox {
+                display: none;
+
+                &:checked ~ .toggle__icon {
+                    left: vw(61px);
+                }
+                
+                //배경
+                &:checked + .toggle__text:after {
+                    background: #9ccc65;
+                    // background: #f7931e;
+                    box-shadow: inset 0 0 vw(10px) 0 rgba(0, 0, 0, 0.5);
+                }
+                
+                &:checked + .toggle__text > .off {
+                    color: transparent;
+                    text-shadow: 0 1px 0 rgba(255,255,255,0);
+                }
+                
+                //텍스트
+                &:checked + .toggle__text > .on{
+                    text-shadow: 0 1px 0 rgba(255,255,255, 0.3);
+                }
+            }
+
+            &__text {
+                display: block;
+                width: vw(120px);
+                height: vw(50px);
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                // background: linear-gradient(to bottom, #8b8c8e 20%, #f4f4f4);
+                border-radius: vw(25px);
+
+                //주황색 박스 / 회색박스
+                &:after {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: vw(100px);
+                    height: vw(50px);
+                    background: #828080;
+                    border-radius: vw(32px);
+                    box-shadow: inset 0 0 vw(20px) 0 rgba(0,0,0,0.6);
+                    transition: .20s;
+                    transform: translate(-50%, -50%);
+                }
+
+                &--on, 
+                &--off {
+                    position: absolute;
+                    top: 50%;
+                    z-index: 2;
+                    font-family: $font_noto;
+                    font-weight: bold;
+                    font-size: vw(20px);
+                    letter-spacing: 1px;
+                    transition: .25s;
+                    text-transform: uppercase;
+                    transform: translateY(-50%);
+                    user-select: none; 
+                }
+                
+                &--on {
+                    left: vw(22px);
+                    // color: #c6631d;
+                    color: #558b2f;
+                    text-shadow: 0 1px 0 rgba(255,255,255,0);
+                }
+                
+                &--off {
+                    left: auto; 
+                    right: vw(16px);
+                    color: #444;
+                    text-shadow: 0 1px 0 rgba(255,255,255, 0.2);
+                }
+            }
+
+            //동그라미 아이콘
+            &__icon {
+                position: absolute;
+                top: vw(4px);
+                left: vw(8px);
+                width: vw(52px);
+                height: vw(52px);
+                background: linear-gradient(to top, #9e9e9e 20%, #f4f4f4);
+                border-radius: 50%;
+                font-size: 0;
+                box-shadow: 0 vw(5px 10px) 0 rgba(0,0,0,0.7);
+                transition: .25s;
+                
+                &:after {
+                    content: "";
+                    position: absolute;
+                    top: vw(4px);
+                    left: vw(4px);
+                    width: vw(44px);
+                    height: vw(44px);
+                    background: #d5d4d4;
+                    border-radius: 50%;
+                    z-index: 1;
                 }
             }
         }

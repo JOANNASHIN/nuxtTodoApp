@@ -1,8 +1,41 @@
 //공통
 @import "./library/vw.scss";
-@import "./divide/reset.scss";
-@import "./divide/common.scss";
-@import "./divide/layout.scss";
+
+//TEXT
+$black: #1e1e1e;
+$dark: #646464;
+$medium: #a0a0a0;
+$silver: #c8c8c8;
+$white: #fff;
+
+//LINE, BG, BORDER
+$charcole: #323232; //차콜
+$light: #eaeaea;
+$bright: #f6f6f6;
+
+//SYSTEM
+$red: #f44336;
+$yellow: #fab200;
+$green: #3ab505;
+
+//POINT
+$yellowpcolor: #fbc967;
+$dmilpcolor: #0489ff;
+
+//FONT 국문
+$font: "SpoqaHanSansNeo", sans-serif;
+$font_noto: "Notosans", sans-serif;
+
+//FONT 숫자, 영문
+$font_n: $font;
+
+
+$black: #1e1e1e;
+// $pcolor: #ec7126;
+// $lightpcolor:#68dd8e;//rgba(236, 113, 38, 0.7);
+$pcolor: #9ccc65;
+$mediumpcolor: #43a047;
+$lightpcolor:#dcedc8;//rgba(236, 113, 38, 0.7);
 
 %clear {
     &:after {
@@ -23,8 +56,70 @@
     margin: auto;
 }
 
-$point: #ec7126;
-$pcolor: #ec7126;
+%scroll {
+    overflow-y: hidden;
+    overflow-x: auto;
+    margin-bottom: rem(-5px);
+    padding-bottom: rem(5px);
+    white-space: nowrap;
+    font-size: 0;
+
+    &::-webkit-scrollbar {
+        display: none;
+
+        &-thumb {
+            display: none;
+        }
+
+        &-button {
+            display: none;
+        }
+    }
+}
+
+@mixin fontcss($color: $black, $weight: 200, $size: rem(14px), $lineheight: 1.2) {
+    @if ($color) {
+        color: $color;
+    }
+    @if ($weight) {
+        font-weight: $weight;
+    }
+    @if ($size) {
+        font-size: $size;
+    }
+    @if ($lineheight) {
+        line-height: $lineheight;
+    }
+}
+
+@mixin imageResize($type: "width") {
+    overflow: hidden;
+    position: relative;
+
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        
+        @if ($type == "width") {
+            width: 100%;
+            height: auto;
+        }
+        @else if ($type == "height") {
+            width: auto;
+            height: 100%;
+        }
+        @else if ($type == "auto") {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+}
 
 @mixin line($lineCount: 1) {
     /* 사용법 : @include line(라인수) */
@@ -46,4 +141,10 @@ $pcolor: #ec7126;
 }
 
 //페이지별
+@import "./divide/font.scss";
+@import "./divide/reset.scss";
+@import "./divide/common.scss";
+@import "./divide/layout.scss";
 @import "./divide/todo.scss";
+@import "./divide/calendar.scss";
+@import "./divide/addModal.scss";

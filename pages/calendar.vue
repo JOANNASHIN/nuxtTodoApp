@@ -18,7 +18,7 @@
             />
         </div>
 
-        <section class="fb__calendar__list">
+        <section class="fb__calendar__list" v-show="false">
             <h3 class="list__title">
                 <em>{{getDateText()}}</em>
                 <span>일정</span>
@@ -27,7 +27,7 @@
                 <ul class="list__wrapper">
                     <template v-for="(list, index) in todoList">
                         <template v-if="list.content">
-                            <li class="list__box" :class="list.status ? 'done' : ''" :key="index" :data-uuid="list.id">
+                            <li class="list__box" :class="list.status ? 'done' : list.priority ? 'red' : ''" :key="index" :data-uuid="list.id">
                                 <p class="list__text">
                                     {{list.content}}
                                 </p>
@@ -37,14 +37,15 @@
                 </ul>
             </template>
         </section>
+
     </section>
 </template>
 
+
 <script>
-    import moment from "moment";
     import Calendar from 'v-calendar/lib/components/calendar.umd'
     import DatePicker from 'v-calendar/lib/components/date-picker.umd'
-    
+
     moment.lang('ko', {
         weekdays: ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"],
         weekdaysShort: ["일","월","화","수","목","금","토"],
@@ -59,7 +60,7 @@
 
         components: {
             "calendar": Calendar,
-            "date-picker": DatePicker
+            "date-picker": DatePicker,
         },
 
         data() {
@@ -101,17 +102,17 @@
             attributes() {
                 return [
                     ...this.todoList.map(todo => ({
-                        dates: todo.dates,
-                        
+                        dates: todo.deadline,
+
                         dot: todo.key === "today" ? false : {
-                            color: todo.status ? "gray" : "orange"
+                            color: todo.status ? "gray" : todo.priority ? "red" : "green"
                         },
 
                         highlight: todo.key === "today" ? "red" : "",
                         
-                        // popover: todo.key === "today" ? false : {
-                        //     label: `${todo.status ? '(완료) ' : ''}${todo.content}`
-                        // },
+                        popover: todo.key === "today" ? false : {
+                            label: todo.content
+                        },
 
                         customData: todo,
                     }))

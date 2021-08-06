@@ -3,9 +3,10 @@ import Seo from "~/plugins/mixins/seo.js";
 import Mixin from "~/plugins/mixins/mixin.js";
 import firebase from "firebase";
 
-Vue.mixin(Seo);
-Vue.mixin(Mixin);
-
+import moment from "moment";
+import $ from 'jquery';
+import Swiper from 'swiper';
+import Vue2TouchEvents from 'vue2-touch-events'
 
 const firebaseConfig = {
     apiKey: "AIzaSyCf8-oQQtKWxwqOfaJ8MOlEDEO7TeMymus",
@@ -25,3 +26,22 @@ const database = firebase.firestore();
 
 window.firebase = firebase;
 window.database = database;
+window.moment = moment;
+window.$ = window.jquery = window.jQuery = $;
+window.Swiper = Swiper;
+
+Vue.mixin(Seo);
+Vue.mixin(Mixin);
+Vue.use(Vue2TouchEvents, {
+    disableClick: false,
+    touchClass: '',
+    tapTolerance: 10,
+    touchHoldTolerance: 400,
+    swipeTolerance: 30,
+    longTapTimeInterval: 400,
+    namespace: 'touch'
+})
+
+
+
+

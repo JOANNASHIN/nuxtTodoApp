@@ -129,18 +129,18 @@
                 
                 database.collection("todolist").get().then((result) => {
                     result.forEach(list => {
-                        response.push(list.data());
+                        response.push(Object.assign(list.data(), {
+                                id: list.id
+                        }));
                     })
 
-                    response.reverse();
-
                     this.todoList = response; 
-                    this.todoList.push(
-                        {
-                            key: "today",
-                            dates: new Date(),
-                        }
-                    )
+                    // this.todoList.push(
+                    //     {
+                    //         key: "today",
+                    //         dates: new Date(),
+                    //     }
+                    // )
                 })
             },
 

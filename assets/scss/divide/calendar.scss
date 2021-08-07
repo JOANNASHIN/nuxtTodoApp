@@ -93,6 +93,13 @@
                 &-box-center-center {
                     align-items: baseline !important;
                 }
+
+                &.is-today {
+                    .vc-day-content {
+                        background: $red;
+                        color: #fff;
+                    }
+                }
             }
 
             &-highlight {
@@ -104,7 +111,7 @@
                 flex-wrap: wrap;
                 overflow: hidden !important;
                 max-width: vw(48px) !important;
-                height: vw(10px);
+                height: vw(10px) !important;
                 margin: vw(0 -3px) !important;
             }
 

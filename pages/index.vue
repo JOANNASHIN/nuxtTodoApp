@@ -3,8 +3,10 @@
     <section class="fb__todo fb__todo__feedback">
         <h2 class="fb__title--hidden">일정 확인 앱</h2>
         <div class="fb__todo__top">
+
+            <!-- <strong class="fb__todo__today" v-text="getDateText()"></strong> -->
+
             <nav class="top__nav">
-                <strong class="fb__todo__today" v-text="getDateText()"></strong>
                 <button class="fb__todo__add" @click="addTodoList($event)">추가</button>
             </nav>
 
@@ -13,15 +15,15 @@
             </div>
 
             <ul class="fb__todo__count">
-                <li class="count__box" @click="sortType = 'all'">
+                <li class="count__box" @click="listType = 'all'">
                     <span class="count__title">전체</span>
                     <em class="count__value count__value--gray">{{count.total}}</em>
                 </li>
-                <li class="count__box" @click="sortType = 'ing'">
+                <li class="count__box" @click="listType = 'ing'">
                     <span class="count__title">진행중</span>
                     <em class="count__value">{{count.ing}}</em>
                 </li>
-                <li class="count__box" @click="sortType = 'done'">
+                <li class="count__box" @click="listType = 'done'">
                     <span class="count__title">진행완료</span>
                     <em class="count__value count__value--gray">{{count.end}}</em>
                 </li>
@@ -29,6 +31,14 @@
         </div>
 
         <div class="fb__todo__content">
+            <nav class="fb__todo__sort">
+                <select v-model="sortType">
+                    <option value="timestamp">등록순</option>
+                    <option value="deadline">마감기한순</option>
+                    <option value="priority">우선순위순</option>
+                </select>
+            </nav>
+
             <!-- 로딩중 -->
             <template v-if="false === fetches.todo">
                 <ul class="fb__loading__shimmer">
@@ -45,15 +55,20 @@
             <template v-else-if="true === fetches.todo">
                 <!-- 라스트 있는 케이스 -->
                 <template v-if="todoList && todoList.length">
-                    <ul class="fb__todo__list" :class="sortType">
+                    <ul class="fb__todo__list" :class="listType">
                         <template v-for="(list, index) in todoList">
                             <!-- 리스트 -->
-                            <li ref="jsTodoEachBox" class="fb__todo__each swiper-container" :class="list.status ? 'done' : list.priority ? 'red' : ''" :key="index" :data-uuid="list.id">
+                            <li ref="todoEachBox" 
+                                class="fb__todo__each swiper-container" 
+                                :class="list.status ? 'done' : list.priority ? 'red' : ''" 
+                                :data-uuid="list.id"
+                                :key="index"
+                                v-touch:touchhold="changeToEditMode">
+                                
                                 <div class="each__wrapper swiper-wrapper">
-                                    <!-- 콘텐츠 -->
-
-                                    <!-- ($event, index) -->
                                     <div class="each__content swiper-slide" v-touch:start="hideOtherController">
+                                        <span class="each__sort" v-show="mode == 'EDIT'">정렬 바꾸기</span>
+
                                         <div class="each__content__inner">
                                             <time class="each__date fb__todo__date">
                                                 {{getDday(list.deadline)}}
@@ -100,7 +115,7 @@
                     </div>
                 </template>
 
-                    <!-- 없는케이스 -->
+                <!-- 없는케이스 -->
                 <template v-else>
                     <div class="fb__todo__empty">
                         등록된 일정이 없습니다.
@@ -114,7 +129,7 @@
             </template>
         </div>
 
-        <add-todo-modal :isShow="addModal.isOpen" :sendData="sendData" @complete-add-todo="todoListInit('fromAddModal')" @close-add-modal="closeAddModal($event)" v-if="addModal.isOpen"></add-todo-modal>
+        <add-todo-modal :isShow="addModal.isOpen" :addData="sendData" :mode="addModal.mode" @complete-add-todo="todoListInit('fromAddModal')" @close-add-modal="closeAddModal($event)"></add-todo-modal>
     </section>
 </template>
 
@@ -142,6 +157,7 @@
 
                 addModal: {
                     isOpen: false,
+                    mode: "ADD"
                 },
 
                 todoList: [],
@@ -154,11 +170,15 @@
                     end: 0,
                 },
 
+                sendData: {},
+
                 sliders: [],
 
-                sortType: "all",
+                sortType: "timestamp",
 
-                sendData: {},
+                listType: "all",
+
+                mode: "DEFAULT",
 
             }
         },
@@ -169,71 +189,18 @@
             this.todoListInit();
         },
 
+        watch: {
+            sortType(_value, _before) {
+                this.orderBySortType(_value);
+            }
+        },
+
         methods: {
-            //슬라이드 실행
-            makeSlider() {
-                const listElementList = this.$refs["jsTodoEachBox"];
+            /**
+             * 기본이벤트 
+             */
 
-                if (listElementList && listElementList.length) {
-                    listElementList.forEach((el, idx) => {
-                        this.sliders[idx] = new Swiper(el, {
-                            loop: false,
-                            initSlide: 0,
-                            slidesPerView: "auto",
-                        })
-                    })
-                }
-            },
-
-            //이벤트 추가 모달 닫기
-            closeAddModal() {
-                this.addModal.isOpen = false;
-            },
-
-            //DB > DOC 구하기
-            getDocument (uuid) {
-                return this.collection.doc(uuid);
-            },
-
-            //날짜 데이터
-            getDate() {
-                return moment(new Date()).format("YYYY-MM-DD");
-            },
-            
-            //요일 들어간 날짜 구하기
-            getDateText() {
-                const date = new Date()
-                const dayList = ["일", "월", "화", "수", "목", "금", "토"];
-                return moment(date).format("YYYY.MM.DD") + " " + dayList[date.getDay()];
-            },
-
-            //요일 들어간 날짜 구하기
-            getDday(_deadline) {
-                const today = moment(new Date()).format("YYYY-MM-DD");
-                let dday = moment(_deadline).diff(moment(today), "days");
-
-                if (dday == 0) dday = "D-DAY";
-                else if (dday < 0) dday = `D+${dday}`
-                else dday = `D-${dday}`;
-
-                return dday;
-            },
-
-            //슬라이드 리셋
-            resetSlide(slide) {
-                if (slide) {
-                    slide.slideTo(0);
-                }
-                else {
-                    if (this.sliders && this.sliders.length) {
-                        this.sliders.forEach(slide => {
-                            slide.slideTo(0);
-                        })
-                    }
-                }
-            },
-
-            // todolist 뿌리기
+            // todolist 리스트 가져오기
             async todoListInit(_from) {
                 try {
                     const response = await this.requestTodoList();
@@ -267,7 +234,7 @@
                     this.fetches.dbConnect = false;
                 }
             },
-            
+
             // 상단 개수 수정
             updateCount() {
                 const count = this.count;
@@ -289,16 +256,6 @@
                 count.end = _endCount;
             },
 
-            // 컨트롤러 HIDE
-            hideOtherController(e) {
-                const $this = $(e.target);
-                const _index = $this.closest(".fb__todo__each").index();
-
-                this.sliders.forEach((slide, idx) => {
-                    if (_index != idx) this.resetSlide(slide);
-                });
-            },
-
             // 검색하기
             async searchTodoList(e) {
                 const response = await this.requestTodoList();
@@ -309,7 +266,11 @@
 
             // 추가하기 (모달 열기)
             addTodoList(e) {
-                this.sendData = {type: "ADD"};
+                this.addModal.mode = "ADD";
+                this.sendData = {
+                    deadline: moment(new Date()).format("YYYY-MM-DD")
+                };
+
                 this.addModal.isOpen = true;
                 this.resetSlide();
             },
@@ -317,7 +278,7 @@
             // 수정하기 (모달 열기)
             editTodoList(list, index) {
                 Object.assign(this.sendData, list);
-                this.sendData.type = "EDIT";
+                this.addModal.mode = "EDIT";
 
                 this.resetSlide(this.sliders[index]);
                 this.addModal.isOpen = true;
@@ -389,7 +350,96 @@
                 catch(error) {
                     console.error("deleteAll error", error);
                 }
-            },           
+            },    
+            
+            /**
+             * 기타 이벤트
+             */
+
+            //이벤트 추가 모달 닫기
+            closeAddModal() {
+                this.addModal.isOpen = false;
+            },
+
+            //DB > DOC 구하기
+            getDocument (uuid) {
+                return this.collection.doc(uuid);
+            },
+
+            //날짜 데이터
+            getDate() {
+                return moment(new Date()).format("YYYY-MM-DD");
+            },
+            
+            //요일 들어간 날짜 구하기
+            getDateText() {
+                const date = new Date()
+                const dayList = ["일", "월", "화", "수", "목", "금", "토"];
+                // return moment(date).format("YYYY.MM.DD") + " " + dayList[date.getDay()];
+                return moment(date).format("YYYY.MM.DD");
+            },
+
+            //요일 들어간 날짜 구하기
+            getDday(_deadline) {
+                const today = moment(new Date()).format("YYYY-MM-DD");
+                let dday = moment(_deadline).diff(moment(today), "days");
+
+                if (dday == 0) dday = "D-DAY";
+                else if (dday < 0) dday = `D${String(dday).replace("-", "+")}`
+                else dday = `D-${dday}`;
+
+                return dday;
+            },
+
+            //슬라이드 실행
+            makeSlider() {
+                const listElementList = this.$refs["todoEachBox"];
+
+                if (listElementList && listElementList.length) {
+                    listElementList.forEach((el, idx) => {
+                        this.sliders[idx] = new Swiper(el, {
+                            loop: false,
+                            initSlide: 0,
+                            slidesPerView: "auto",
+                        })
+                    })
+                }
+            },
+
+            //슬라이드 리셋
+            resetSlide(slide) {
+                if (slide) {
+                    slide.slideTo(0);
+                }
+                else {
+                    if (this.sliders && this.sliders.length) {
+                        this.sliders.forEach(slide => {
+                            slide.slideTo(0);
+                        })
+                    }
+                }
+            },
+
+            // 컨트롤러 HIDE
+            hideOtherController(e) {
+                const $this = $(e.target);
+                const _index = $this.closest(".fb__todo__each").index();
+
+                this.sliders.forEach((slide, idx) => {
+                    if (_index != idx) this.resetSlide(slide);
+                });
+            },      
+            
+            changeToEditMode() {
+                this.mode = "EDIT";
+            },
+
+            //정렬
+            async orderBySortType(_value) {
+                const response = await this.requestTodoList(_value);
+                console.log(_value, response);
+                this.todoList = response;
+            }
         }
     }
 </script>

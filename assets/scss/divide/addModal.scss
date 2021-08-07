@@ -5,13 +5,14 @@
         left: 0;
         z-index: 100;
         width: 100%;
-        // height: calc(100% - #{vw(51px)});
-        height: 100%;
+        height: calc(100% - #{vw(51px)});
+        // height: 80%;
         background: #f8f8f8;
+        box-shadow: vw(0 0 20px) 0 rgba(0, 0, 0, 0.3);
+        transition: bottom 1s ease;
 
         &.show {
             bottom: 0;
-            transition: bottom 5s ease-in;
         }
 
         &__top {
@@ -92,6 +93,7 @@
                         color: $black;
                         font-weight: 400;
                         font-size: vw(26px);
+                        line-height: vw(80px);
 
                         &::-webkit-datetime-edit-fields-wrapper {
                             color: $medium;

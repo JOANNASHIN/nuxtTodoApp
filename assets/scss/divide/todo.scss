@@ -21,16 +21,15 @@
             .top {
                 &__nav {
                     display: block;
-                    padding: vw(30px 0 40px);
+                    padding: vw(30px 0 20px);
                     @extend %clear;
                 }
             }
         }
 
         &__today {
-            float: left;
-            font-weight: 600;
-            font-size: vw(26px);
+            font-weight: 400;
+            font-size: vw(40px);
         }
 
         &__add {
@@ -69,7 +68,7 @@
         }
 
         &__count {
-            margin: vw(30px 0);
+            padding: vw(40px 0);
             font-size: 0;
             text-align: center;
 
@@ -101,7 +100,28 @@
         }
 
         &__content {
-            margin: vw(50px -20px 0 0);
+            margin: vw(0 -20px 0 0);
+        }
+
+        &__sort {
+            display: block;
+            padding-right: vw(20px);
+            margin-bottom: vw(10px);
+            text-align: right;
+
+            select {
+                display: inline-block;
+                width: auto;
+                height: vw(40px);
+                padding: vw(0 30px 0 0);
+                border: none;
+                background: url("../images/common/icon-list-sort-bk.png") no-repeat right center / vw(auto 25px);
+                color: $black;
+                font-weight: 600;
+                font-size: vw(23px);
+                line-height: vw(40px);
+                direction: rtl;
+            }
         }
 
         &__list {
@@ -223,6 +243,15 @@
                             transform: translate(0, -50%);
                         }
                     }
+                }
+
+                &__sort {
+                    display: inline-block;
+                    width: vw(40px);
+                    height: vw(40px);
+                    margin-right: vw(20px);
+                    background: url("../images/common/icon-list-change.png") no-repeat center center / 100% auto;
+                    font-size: 0;
                 }
 
                 &__date {

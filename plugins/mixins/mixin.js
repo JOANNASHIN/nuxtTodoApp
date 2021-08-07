@@ -66,7 +66,7 @@ const mixin = {
                             }));
                         })
 
-                        customData.reverse();
+                        if (_orderBy != "deadline") customData.reverse();
 
                         resolve(customData);
                     })

@@ -54,22 +54,28 @@
             border-radius: vw(50px);
             font-size: 0;
             text-align: center;
+            box-shadow: inset 0 0 vw(10px) 0 rgba(0, 0, 0, 0.4);
         }
 
         &__menu {
             display: inline-block;
-            width: vw(150px);
+            width: vw(120px);
             height: 100%;
-            color: $black;
-            font-weight: normal;
-            font-size: vw(23px); 
-            line-height: vw(90px);
 
             &.active {
                 width: vw(90px);
                 height: vw(90px);
                 border-radius: 50%;
-                background: $pcolor;
+                background-color: $pcolor;
+                box-shadow: inset 0 0 vw(20px) 0 rgba(0, 0, 0, 0.4);
+            }
+
+            &--list {
+                background: url("../images/common/icon-menu-list.png") no-repeat center center / vw(44px 44px);
+            }
+
+            &--calendar {
+                background: url("../images/common/icon-menu-calendar.png") no-repeat center center / vw(44px 44px);
             }
         }
     }

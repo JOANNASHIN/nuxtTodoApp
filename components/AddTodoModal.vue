@@ -10,7 +10,7 @@
                     <h2 class="fb__addModal__title">이벤트 등록하기</h2>
                     
                     <button type="button" class="fb__addModal__submit" @click="addTodoList($event)">
-                        {{type == "ADD" ? "추가" : "수정"}}
+                        {{mode == "ADD" ? "추가" : "수정"}}
                     </button>
                 </header>
 
@@ -39,10 +39,6 @@
                     <dl class="write__list">
                         <dt class="write__title">마감기한</dt>
                         <dd class="write__cont">
-                            <!-- <select name="" id="">
-                                <option value="">하루종일</option>
-                                <option value="">기한 정하기</option>
-                            </select> -->
                             <input type="date" v-model="addData.deadline">
                         </dd>
                     </dl>
@@ -65,10 +61,15 @@
                 default: true
             },
 
-            sendData: {
+            mode: {
+                type: String,
+                default: "ADD"
+            },
+
+            addData: {
                 type: Object,
                 default: null
-            }    
+            },
         },
 
         data() {
@@ -76,8 +77,6 @@
                 fetches: {
                     dbConnect: false
                 },
-
-                type: "ADD",
 
                 addData: {
                     priority: null,
@@ -92,8 +91,11 @@
         },
 
         created() {
-            this.type = this.sendData.type;
-            Object.assign(this.addData, this.sendData);
+        },
+
+        watch: {
+            isShow(_value) {
+            }
         },
 
         methods: {
@@ -113,7 +115,7 @@
                 let isPass = true;
                 
                 if (!addData.content || addData.content.trim() == "") {
-                    alert("한글자 이상 입력해주세요.");
+                    alert("내용은 한 글자 이상 입력해주세요.");
                     isPass = false;
                 }
 
@@ -122,7 +124,7 @@
                     isPass = false;
                 }
 
-                else if (new Date(addData.deadline).getTime() < new Date().getTime()) {
+                else if (moment(addData.deadline).diff(moment(new Date()).format("YYYY-MM-DD")) < 0) {
                     alert("마감기한이 잘못 설정되었습니다.")
                     isPass = false;
                 }
@@ -139,7 +141,7 @@
 
                 try {
                     // 추가 
-                    if (this.type == "ADD") {
+                    if (this.mode == "ADD") {
                         const _today = new Date();
     
                         Object.assign(this.addData, {

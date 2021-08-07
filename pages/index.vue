@@ -3,12 +3,8 @@
     <section class="fb__todo fb__todo__feedback">
         <h2 class="fb__title--hidden">일정 확인 앱</h2>
         <div class="fb__todo__top">
-            <!-- bind a tap event -->
-            <!-- <span v-touch:swipe.left="makeSlider">Tap Me</span> -->
-
-
-            <!-- <p class="fb__todo__today" v-text="getDateText()"></p> -->
             <nav class="top__nav">
+                <strong class="fb__todo__today" v-text="getDateText()"></strong>
                 <button class="fb__todo__add" @click="addTodoList($event)">추가</button>
             </nav>
 
@@ -250,9 +246,10 @@
             },
             
             //요일 들어간 날짜 구하기
-            getDateText(date) {
-                const dayList = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
-                return moment(date).format("YYYY.MM.DD") + " " + dayList[new Date(date).getDay()];
+            getDateText() {
+                const date = new Date()
+                const dayList = ["일", "월", "화", "수", "목", "금", "토"];
+                return moment(date).format("YYYY.MM.DD") + " " + dayList[date.getDay()];
             },
 
             //요일 들어간 날짜 구하기

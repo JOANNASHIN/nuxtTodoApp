@@ -46,11 +46,6 @@
     import Calendar from 'v-calendar/lib/components/calendar.umd'
     import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
-    moment.lang('ko', {
-        weekdays: ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"],
-        weekdaysShort: ["일","월","화","수","목","금","토"],
-    });
-
     export default {
         name: "calendar",
         head() {
@@ -91,7 +86,7 @@
         },
 
         created() {
-            this.requestTodoList();
+            this.calendarInit();
         },
 
         mounted(){
@@ -121,32 +116,19 @@
         },
 
         methods: {
-            async requestTodoList() {
-                // const response = await this.getJsondata("/json/todoList.json");
-                // this.todoList = response.todo; 
-
-                const response = [];
-                
-                database.collection("todolist").get().then((result) => {
-                    result.forEach(list => {
-                        response.push(Object.assign(list.data(), {
-                                id: list.id
-                        }));
-                    })
-
-                    this.todoList = response; 
-                    // this.todoList.push(
-                    //     {
-                    //         key: "today",
-                    //         dates: new Date(),
-                    //     }
-                    // )
-                })
+            async calendarInit() {
+                const response = await this.requestTodoList();
+                this.todoList = response; 
+                // this.todoList.push(
+                //     {
+                //         key: "today",
+                //         dates: new Date(),
+                //     }
+                // )
             },
 
             getDateText() {
                 const today = new Date();
-                const dayList = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
                 return moment(today).format("YYYY.MM.DD");
             },
         }

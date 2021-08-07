@@ -73,8 +73,6 @@
 
         data() {
             return {
-                collection: database.collection("todolist"),
-
                 fetches: {
                     dbConnect: false
                 },

@@ -9,8 +9,7 @@
             </nav>
 
             <div class="fb__todo__search">
-                <input ref="todoInput" type="text" value="" @keyup.enter="" placeholder="일정을 검색하세요." maxlength="100">
-                <!-- <button class="search__button" @click="">검색</button> -->
+                <input type="text" v-model="searchText" @keyup="searchTodoList($event)" placeholder="일정을 검색하세요." maxlength="100">
             </div>
 
             <ul class="fb__todo__count">
@@ -88,42 +87,6 @@
                                         </button>
                                     </div>
                                 </div>
-                                <!--  -->
-                                <!-- <div class="each__wrapper">
-                                    <div class="each__content">
-                                        <div class="each__content__inner">
-                                            <time class="each__date fb__todo__date">
-                                                {{getDday(list.deadline)}}
-                                            </time>
-
-                                            <p class="each__text fb__todo__text">
-                                                {{list.content}}
-                                            </p>
-                                        </div>
-
-                                        <div class="fb__toggle each__toggle">
-                                            <label class="toggle__label" @click="updateStatus(list)">
-                                                <input type="checkbox" class="toggle__checkbox" :checked="list.status ? false : true">
-                                                <div class="toggle__text">
-                                                    <span class="toggle__text--on">ON</span>
-                                                    <span class="toggle__text--off">OFF</span>
-                                                </div>  
-                                                <span class="toggle__icon">동그라미 아이콘</span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="each__controller">
-                                        <button class="each__controller__rewrite" :disabled="list.status ? true : false" @click.stop="list.isEdit = true;">수정</button>
-                                        <button class="each__controller__delete" @click.stop="deleteFromList(list.id);">삭제</button>
-                                    </div>
-                                </div> -->
-                                <!--  -->
-                                <!-- <div class="each__update" :class="list.isEdit ? 'show' : ''">
-                                    <input :ref="'editInput' + list.id" type="text" :value="list.content">
-                                    <button class="fb__button" @click.stop="editListContent(list.id);">수정</button>
-                                    <button class="fb__button" @click.stop="list.isEdit = false;">취소</button>
-                                </div> -->
                             </li>
                         </template>
                     </ul>
@@ -151,17 +114,12 @@
             </template>
         </div>
 
-        <add-todo-modal :isShow="addModal.isOpen" :sendData="sendData" @complete-add-todo="requestTodoList('fromAddModal')" @close-add-modal="closeAddModal($event)" v-if="addModal.isOpen"></add-todo-modal>
+        <add-todo-modal :isShow="addModal.isOpen" :sendData="sendData" @complete-add-todo="todoListInit('fromAddModal')" @close-add-modal="closeAddModal($event)" v-if="addModal.isOpen"></add-todo-modal>
     </section>
 </template>
 
 <script>
     import AddTodoModal from '/components/AddTodoModal.vue';
-
-    moment.lang('ko', {
-        weekdays: ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"],
-        weekdaysShort: ["일","월","화","수","목","금","토"],
-    });
 
     export default {
         name: "toodList",
@@ -177,8 +135,6 @@
 
         data() {
             return {
-                collection: database.collection("todolist"),
-
                 fetches: {
                     todo: false,
                     dbConnect: false
@@ -189,6 +145,8 @@
                 },
 
                 todoList: [],
+
+                searchText: "",
                 
                 count: {
                     total: 0,
@@ -200,18 +158,15 @@
 
                 sortType: "all",
 
-                sendData: {}
+                sendData: {},
+
             }
         },
 
         created() {
             console.clear();
 
-            this.requestTodoList();
-        },
-
-        mounted() {
-            
+            this.todoListInit();
         },
 
         methods: {
@@ -278,39 +233,28 @@
                 }
             },
 
-            // todolist 데이터 요청
-            async requestTodoList(_from) {
+            // todolist 뿌리기
+            async todoListInit(_from) {
                 try {
-                    await this.collection.orderBy("timestamp").get().then((result) => {
-                        const arr = [];
+                    const response = await this.requestTodoList();
 
-                        result.forEach(list => {
-                            arr.push(Object.assign(list.data(), {
-                                id: list.id
-                            }));
-                        })
+                    this.todoList = response;
+                    this.fetches.todo = true;
+                    this.updateCount();
 
-                        arr.reverse();
-
-                        this.todoList = arr;
-                        this.fetches.todo = true;
-                        this.updateCount();
-
-                        this.$nextTick(() => {
-                            //최초 생성
-                            if (!this.sliders.length) {
-                                this.makeSlider();
-                            }
-                            //슬라이드 다 이동
-                            else {
-                                this.sliders.forEach(slide => {
-                                    slide.slideTo(0)
-                                })
-                            }
-                            
-                            if (_from == "fromAddModal") this.closeAddModal();
-                        })
-
+                    this.$nextTick(() => {
+                        //최초 생성
+                        if (!this.sliders.length) {
+                            this.makeSlider();
+                        }
+                        //슬라이드 다 이동
+                        else {
+                            this.sliders.forEach(slide => {
+                                slide.slideTo(0)
+                            })
+                        }
+                        
+                        if (_from == "fromAddModal") this.closeAddModal();
                     })
                 }
 
@@ -353,6 +297,14 @@
                 this.sliders.forEach((slide, idx) => {
                     if (_index != idx) this.resetSlide(slide);
                 });
+            },
+
+            // 검색하기
+            async searchTodoList(e) {
+                const response = await this.requestTodoList();
+                const targetLists = response.filter(v => v.content.indexOf(this.searchText) != -1);
+
+                this.todoList = targetLists;
             },
 
             // 추가하기 (모달 열기)

@@ -1,6 +1,11 @@
 import $ from "jquery";
 
 const mixin = {
+    data() {
+        return {
+            collection: database.collection("todolist"),
+        }
+    },
     methods: {
         /**
          * api통신
@@ -31,40 +36,6 @@ const mixin = {
             })
         },
 
-        /**
-         * 현재 위치 알아오기
-         */
-        geoLocation() {
-            return new Promise((resolve, reject) => {
-                try {
-                    if (window.navigator.geolocation) { // GPS를 지원하면
-                        // 현재 위치 정보를 가져온다.
-                        window.navigator.geolocation.getCurrentPosition(
-                            function(position) {
-                                resolve(position);
-        
-                            },
-                            function(error) {
-                                alert("위치 허용을 해주셔야 정확한 날씨정보를 사용하실 수 있습니다.")
-                                resolve(error)
-                            }, 
-                            {
-                                enableHighAccuracy: false,
-                                maximumAge: 0,
-                                timeout: Infinity
-                            }
-                        );
-                    } 
-                    else {
-                        alert("GPS를 지원하지 않습니다");
-                    }
-                }
-                catch(error) {
-                    reject(error)
-                }
-            });
-        },
-
         getJsondata(url) {
             if (!url) return ;
 
@@ -80,6 +51,31 @@ const mixin = {
                 }
             })
            
+        },
+
+        // todolist 데이터 요청
+        requestTodoList(_orderBy) {
+            return new Promise((resolve, reject) => {
+                try {
+                    this.collection.orderBy(_orderBy || "timestamp").get().then((result) => {
+                        const customData = [];
+
+                        result.forEach(list => {
+                            customData.push(Object.assign(list.data(), {
+                                id: list.id
+                            }));
+                        })
+
+                        customData.reverse();
+
+                        resolve(customData);
+                    })
+                }
+
+                catch (error) {
+                    reject(error);
+                }
+            })
         },
     }
 }

@@ -177,6 +177,7 @@
                 }
             },
 
+            // 아래로 터치하면 내려가기
             touchDown(direction) {
                 if (direction == "bottom") {
                     this.$emit("touch-down")

@@ -1,12 +1,13 @@
 {
-  "name": "accountApp",
+  "name": "todoApp",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "deploy": "nuxt build && firebase deploy"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.12.5",

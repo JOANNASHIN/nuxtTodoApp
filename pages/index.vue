@@ -1,7 +1,7 @@
 
 <template>
     <section class="fb__todo fb__todo__feedback">
-        <h2 class="fb__title--hidden">일정 확인 앱</h2>
+        <h2 class="fb__title--hidden">할일 관리 리스트형</h2>
         <div class="fb__todo__top">
 
             <!-- <strong class="fb__todo__today" v-text="getDateText()"></strong> -->
@@ -19,7 +19,7 @@
             </nav>
 
             <div class="fb__todo__search">
-                <input type="text" v-model="searchText" @keyup="searchTodoList($event)" placeholder="일정을 검색하세요." maxlength="100">
+                <input type="text" v-model="searchText" @keyup="searchTodoList($event)" placeholder="해야할 일을 검색해 보세요." maxlength="100">
             </div>
 
             <ul class="fb__todo__count">
@@ -147,7 +147,7 @@
             :addData="sendData" 
             :mode="addModal.mode"
             @touch-down="closeAddModal($event)" 
-            @complete-add-todo="todoListInit('fromAddModal')" 
+            @complete-add-todo="completeAddTodo($event)" 
             @close-add-modal="closeAddModal($event)"
         ></add-todo-modal>
     </section>
@@ -240,8 +240,6 @@
                                 slide.slideTo(0)
                             })
                         }
-                        
-                        if (_from == "fromAddModal") this.closeAddModal();
                     })
                 }
 
@@ -376,9 +374,15 @@
              * 기타 이벤트
              */
 
-            //이벤트 추가 모달 닫기
+            //추가 모달 닫기
             closeAddModal() {
                 this.addModal.isOpen = false;
+            },
+
+            //추가완료
+            completeAddTodo() {
+                this.todoListInit();
+                this.closeAddModal();
             },
 
             //DB > DOC 구하기

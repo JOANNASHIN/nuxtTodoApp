@@ -6,8 +6,16 @@
 
             <!-- <strong class="fb__todo__today" v-text="getDateText()"></strong> -->
 
-            <nav class="top__nav">
-                <button class="fb__todo__add" @click="addTodoList($event)">추가</button>
+            <nav class="fb__todo__nav">
+                <template v-if="false === editMode">
+                    <button class="fb__todo__edit" @click="changeToEditMode($event)">편집</button>
+                    <button class="fb__todo__add" @click="addTodoList($event)">추가</button>
+                </template>
+
+                <template v-else>
+                    <button class="edit__cancel" @click="sortCancel()">취소</button>
+                    <button class="edit__save" @click="sortChangeSaved()">적용</button>
+                </template>
             </nav>
 
             <div class="fb__todo__search">
@@ -33,9 +41,10 @@
         <div class="fb__todo__content">
             <nav class="fb__todo__sort">
                 <select v-model="sortType">
-                    <option value="timestamp">등록순</option>
+                    <option value="order">내가설정한순</option>
                     <option value="deadline">마감기한순</option>
                     <option value="priority">우선순위순</option>
+                    <option value="timestamp">등록순</option>
                 </select>
             </nav>
 
@@ -56,54 +65,58 @@
                 <!-- 라스트 있는 케이스 -->
                 <template v-if="todoList && todoList.length">
                     <ul class="fb__todo__list" :class="listType">
-                        <template v-for="(list, index) in todoList">
-                            <!-- 리스트 -->
-                            <li ref="todoEachBox" 
-                                class="fb__todo__each swiper-container" 
-                                :class="list.status ? 'done' : list.priority ? 'red' : ''" 
-                                :data-uuid="list.id"
-                                :key="index"
-                                v-touch:touchhold="changeToEditMode">
-                                
-                                <div class="each__wrapper swiper-wrapper">
-                                    <div class="each__content swiper-slide" v-touch:start="hideOtherController">
-                                        <span class="each__sort" v-show="mode == 'EDIT'">정렬 바꾸기</span>
+                         <draggable v-model="todoList" :options="{disabled : !editMode}" handle=".each__sort">
+                            <transition-group type="transition">
+                                <template v-for="(list, index) in todoList">
+                                    <!-- 리스트 -->
+                                    <li ref="todoEachBox" 
+                                        class="fb__todo__each swiper-container" 
+                                        :class="list.status ? 'done' : list.priority ? 'red' : ''" 
+                                        :data-uuid="list.id"
+                                        :key="index"
+                                        v-touch:touchhold="changeToEditMode">
+                                        
+                                        <div class="each__wrapper swiper-wrapper">
+                                            <div class="each__content swiper-slide" v-touch:start="hideOtherController">
+                                                <span class="each__sort" v-show="editMode">정렬 바꾸기</span>
 
-                                        <div class="each__content__inner">
-                                            <time class="each__date fb__todo__date">
-                                                {{getDday(list.deadline)}}
-                                            </time>
+                                                <div class="each__content__inner">
+                                                    <time class="each__date fb__todo__date">
+                                                        {{getDday(list.deadline)}}
+                                                    </time>
 
-                                            <p class="each__text fb__todo__text">
-                                                {{list.content}}
-                                            </p>
+                                                    <p class="each__text fb__todo__text">
+                                                        {{list.content}}
+                                                    </p>
+                                                </div>
+
+                                                <div class="fb__toggle each__toggle">
+                                                    <label class="toggle__label" @click="updateStatus(list, index)">
+                                                        <input type="checkbox" class="toggle__checkbox" :checked="list.status ? false : true">
+                                                        <div class="toggle__text">
+                                                            <span class="toggle__text--on">ON</span>
+                                                            <span class="toggle__text--off">OFF</span>
+                                                        </div>  
+                                                        <span class="toggle__icon">동그라미 아이콘</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <!-- 컨트롤러 -->
+                                            <div class="swiper-slide each__controller">
+                                                <!-- :disabled="list.status ? true : false" -->
+                                                <button class="each__controller__rewrite" @click.stop="editTodoList(list, index)">
+                                                    <span>수정</span>
+                                                </button>
+                                                <button class="each__controller__delete" @click.stop="deleteFromList(list.id, index);">
+                                                    <span>삭제</span>
+                                                </button>
+                                            </div>
                                         </div>
-
-                                        <div class="fb__toggle each__toggle">
-                                            <label class="toggle__label" @click="updateStatus(list, index)">
-                                                <input type="checkbox" class="toggle__checkbox" :checked="list.status ? false : true">
-                                                <div class="toggle__text">
-                                                    <span class="toggle__text--on">ON</span>
-                                                    <span class="toggle__text--off">OFF</span>
-                                                </div>  
-                                                <span class="toggle__icon">동그라미 아이콘</span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <!-- 컨트롤러 -->
-                                    <div class="swiper-slide each__controller">
-                                        <!-- :disabled="list.status ? true : false" -->
-                                        <button class="each__controller__rewrite" @click.stop="editTodoList(list, index)">
-                                            <span>수정</span>
-                                        </button>
-                                        <button class="each__controller__delete" @click.stop="deleteFromList(list.id, index);">
-                                            <span>삭제</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </template>
+                                    </li>
+                                </template>
+                            </transition-group>
+                        </draggable>
                     </ul>
 
                     <div class="fb__todo__bottom">
@@ -142,12 +155,14 @@
 
 <script>
     import AddTodoModal from '/components/AddTodoModal.vue';
+    import draggable from 'vuedraggable';
 
     export default {
         name: "toodList",
 
-        component: {
-            "add-todo-modal": AddTodoModal
+        components: {
+            "add-todo-modal": AddTodoModal,
+            "draggable": draggable
         },
 
         head() {
@@ -181,18 +196,16 @@
 
                 sliders: [],
 
-                sortType: "timestamp",
+                sortType: "deadline",
 
                 listType: "all",
 
-                mode: "DEFAULT",
+                editMode: false,
 
             }
         },
 
         created() {
-            console.clear();
-
             this.todoListInit();
         },
 
@@ -210,7 +223,7 @@
             // todolist 리스트 가져오기
             async todoListInit(_from) {
                 try {
-                    const response = await this.requestTodoList();
+                    const response = await this.requestTodoList(this.sortType);
 
                     this.todoList = response;
                     this.fetches.todo = true;
@@ -438,7 +451,7 @@
             },      
             
             changeToEditMode() {
-                this.mode = "EDIT";
+                this.editMode = true;
             },
 
             //정렬
@@ -446,7 +459,25 @@
                 const response = await this.requestTodoList(_value);
                 console.log(_value, response);
                 this.todoList = response;
-            }
+            },
+
+            //편집 취소
+            async sortCancel() {
+                const response = await this.requestTodoList();
+                this.todoList = response;
+                this.editMode = false;
+            },
+
+            //편집 적용
+            sortChangeSaved() {
+                this.todoList.forEach((list, index) => {
+                    list.order = index;
+                    this.collection.doc(list.id).update(list);
+                });
+                
+                this.sortType = "order";
+                this.editMode = false;
+            },
         }
     }
 </script>

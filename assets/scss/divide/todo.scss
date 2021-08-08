@@ -17,12 +17,26 @@
             box-sizing: border-box;
         }
 
-        &__top {
-            .top {
-                &__nav {
-                    display: block;
-                    padding: vw(0 0 20px);
-                    @extend %clear;
+        &__nav {
+            display: block;
+            padding: vw(0 0 20px);
+            @extend %clear;
+
+            .edit {
+                &__cancel {
+                    float: left;
+                    color: $medium;
+                    font-weight: 400;
+                    font-size: vw(26px);
+                    line-height: vw(28px);
+                }
+
+                &__save {
+                    float: right;
+                    color: $red;
+                    font-weight: 600;
+                    font-size: vw(26px);
+                    line-height: vw(28px);
                 }
             }
         }
@@ -32,12 +46,20 @@
             font-size: vw(40px);
         }
 
+        &__edit {
+            float: left;
+            color: $medium;
+            font-weight: 400;
+            font-size: vw(26px);
+            line-height: vw(28px);
+        }
+
         &__add {
             float: right;
-            color: $black;
+            color: $mediumpcolor;
             font-weight: 600;
             font-size: vw(26px);
-            text-align: right;
+            line-height: vw(28px);
         }
 
         &__search {

@@ -44,4 +44,3 @@ Vue.use(Vue2TouchEvents, {
 
 
 
-

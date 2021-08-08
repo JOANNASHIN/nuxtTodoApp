@@ -54,28 +54,53 @@
             border-radius: vw(50px);
             font-size: 0;
             text-align: center;
-            box-shadow: inset 0 0 vw(10px) 0 rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 0 vw(5px) 0 rgba(0, 0, 0, 0.6);
         }
 
         &__menu {
             display: inline-block;
-            width: vw(120px);
+            width: vw(130px);
             height: 100%;
 
             &.active {
+                position: relative;
                 width: vw(90px);
                 height: vw(90px);
                 border-radius: 50%;
-                background-color: $pcolor;
-                box-shadow: inset 0 0 vw(20px) 0 rgba(0, 0, 0, 0.4);
+                background: #afda7e;
+                
+                &:after {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: vw(78px);
+                    height: vw(78px);
+                    border-radius: 50%;
+                    background-color: $pcolor;
+                    transform: translate(-50%, -50%);
+                    box-shadow: 0 vw(5px 10px) 0 rgba(0,0,0,0.7);
+                }
             }
 
             &--list {
-                background: url("../images/common/icon-menu-list.png") no-repeat center center / vw(44px 44px);
+                background: url("../images/common/icon-menu-list-gray.png") no-repeat center center / vw(42px 42px);
+                
+                &.active {
+                    &:after {
+                        background: url("../images/common/icon-menu-list-bk.png") no-repeat center center / vw(42px 42px);
+                    }
+                }
             }
 
             &--calendar {
-                background: url("../images/common/icon-menu-calendar.png") no-repeat center center / vw(44px 44px);
+                background: url("../images/common/icon-menu-calendar-gray.png") no-repeat center center / vw(42px 42px);
+
+                &.active {
+                    &:after {
+                        background: url("../images/common/icon-menu-calendar-bk.png") no-repeat center center / vw(38px 38px);
+                    }
+                }
             }
         }
     }

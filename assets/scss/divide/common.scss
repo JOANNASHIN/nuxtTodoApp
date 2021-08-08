@@ -11,6 +11,10 @@
         }
     }
 
+    &.scroll--lock {
+        overflow: hidden;
+    }
+
     &__title {
         &--hidden {
             font-size: 0;

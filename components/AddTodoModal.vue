@@ -1,5 +1,5 @@
 <template>
-    <article class="fb__addModal" :class="isShow ? 'show' : ''">
+    <article class="fb__addModal" :class="isShow ? 'show' : ''" v-touch:swipe="touchDown">
         <form class="fb__addModal__form">
             <fieldset>
                 <legend>이벤트 등록하기</legend>
@@ -78,14 +78,14 @@
                     dbConnect: false
                 },
 
-                addData: {
-                    priority: null,
-                    content: null,
-                    deadline: null,
-                    status: false,
-                    createDate: null,
-                    timestamp: null,
-                },
+                // addData: {
+                //     priority: null,
+                //     content: null,
+                //     deadline: null,
+                //     status: false,
+                //     createDate: null,
+                //     timestamp: null,
+                // },
 
             }
         },
@@ -95,6 +95,8 @@
 
         watch: {
             isShow(_value) {
+                if(_value) document.getElementsByTagName("body")[0].classList.add("scroll--lock");
+                else document.getElementsByTagName("body")[0].classList.remove("scroll--lock");
             }
         },
 
@@ -174,6 +176,12 @@
                     this.addComplete();
                 }
             },
+
+            touchDown(direction) {
+                if (direction == "bottom") {
+                    this.$emit("touch-down")
+                }
+            }
         }
 
     };

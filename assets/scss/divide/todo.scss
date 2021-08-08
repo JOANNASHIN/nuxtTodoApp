@@ -21,7 +21,7 @@
             .top {
                 &__nav {
                     display: block;
-                    padding: vw(30px 0 20px);
+                    padding: vw(0 0 20px);
                     @extend %clear;
                 }
             }
@@ -117,7 +117,7 @@
                 border: none;
                 background: url("../images/common/icon-list-sort-bk.png") no-repeat right center / vw(auto 25px);
                 color: $black;
-                font-weight: 600;
+                font-weight: 400;
                 font-size: vw(23px);
                 line-height: vw(40px);
                 direction: rtl;

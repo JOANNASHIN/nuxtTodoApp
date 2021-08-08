@@ -129,7 +129,14 @@
             </template>
         </div>
 
-        <add-todo-modal :isShow="addModal.isOpen" :addData="sendData" :mode="addModal.mode" @complete-add-todo="todoListInit('fromAddModal')" @close-add-modal="closeAddModal($event)"></add-todo-modal>
+        <add-todo-modal 
+            :isShow="addModal.isOpen" 
+            :addData="sendData" 
+            :mode="addModal.mode"
+            @touch-down="closeAddModal($event)" 
+            @complete-add-todo="todoListInit('fromAddModal')" 
+            @close-add-modal="closeAddModal($event)"
+        ></add-todo-modal>
     </section>
 </template>
 
